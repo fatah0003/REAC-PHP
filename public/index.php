@@ -24,24 +24,36 @@ $result=$stmt->fetchAll();
             <div class="chat-messages" id="chat-messages">
                 <!-- Les messages apparaîtront ici -->
                 <?php
-                foreach($result as $index => $row){
+                foreach($result as $row){
                     include "../listings/messages.php";
                 }
                 ?>
                 <!-- Start Message -->
                 <!-- Ci-dessous un exemple de structure HTML & CSS d'un message -->
-                <div class="message">
-                    <span>Bonjour, tu vas bien ?</span>
-                    <button class="delete-button">Delete</button>
-                </div>
+               
                 <!-- End Message -->
 
             </div>
             <div class="chat-input">
                 <!-- Le formulaire pour envoyer des messages doit se trouver ci-dessous -->
+                <form class="new" action="" method="post" enctype="multipart/form-data">
+                <label for="message"></label>
+                <input class="message" type="text" id="message" name="message">
+                <button type="submit"> Envoyer</button>
+                </form> 
+
                 <?php
-                require "../listings/form.php";
-                ?> 
+                
+
+                include "../config/db.php";
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $message = $_POST['message'];
+                    $stmt = $pdo->prepare("INSERT INTO messages (message) VALUES (:msg)");
+                    $stmt->bindValue(':msg', $message, PDO::PARAM_STR);
+                    $stmt->execute();
+                }
+                ?>
+              
             </div>
         </div>
     </body>
